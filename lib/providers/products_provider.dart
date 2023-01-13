@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import '../models/http_exception.dart';
 import 'product.dart';
 import 'package:http/http.dart' as http;
 
@@ -166,7 +167,7 @@ print(extractedData['name']);
     }
   }
 
-  void deleteProduct(String id)async {
+  Future<void> deleteProduct(String id)async {
 
     final url =
         'https://flutter-course-f54c8-default-rtdb.firebaseio.com/product/${id}.json';
@@ -175,18 +176,21 @@ print(extractedData['name']);
    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
 
     Product?  existingProduct = _items[existingProductIndex];
-   _items.removeAt(existingProductIndex);
+
     // _items.removeWhere((prod) => prod.id == id);
-    var test = http.delete(Uri.parse(url)).then((response) {
+    final response = await  http.delete(Uri.parse(url));
 
       if(response.statusCode >= 400){
-
+        items.insert(existingProductIndex, existingProduct!);
+        notifyListeners();
+          throw HttpException('Could not delete product');
       }
       existingProduct = null;
-    }).catchError((_){
-      items.insert(existingProductIndex, existingProduct!);
-      notifyListeners();
-    });
+    _items.removeAt(existingProductIndex);
+
+
+
+
 
   // print("======");
     // print(test.body);
