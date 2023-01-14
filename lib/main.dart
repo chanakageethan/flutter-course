@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:state_management/firebase_options.dart';
 import 'package:state_management/providers/Cart.dart';
+import 'package:state_management/providers/auth.dart';
 import 'package:state_management/providers/orders.dart';
 import 'package:state_management/providers/products_provider.dart';
+import 'package:state_management/screens/auth_screen.dart';
 import 'package:state_management/screens/cart_screen.dart';
 import 'package:state_management/screens/edit_product_screen.dart';
 import 'package:state_management/screens/orders_screen.dart';
@@ -30,6 +32,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
+        ChangeNotifierProvider(
           create: (ctx) => Products(),
         ),
         ChangeNotifierProvider(
@@ -46,7 +51,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato'),
-        home: const ProductOverviewScreen(),
+        home:  AuthScreen(),
         routes: {
           ProductDetailsScreen.routName: (ctx) => ProductDetailsScreen(),
           CartScreen.routeName :(ctx)=> CartScreen(),
